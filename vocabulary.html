@@ -1,0 +1,1995 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!--
+    Locked standalone page: AP Micro Lexicon Quest.
+    Keep this page self-contained and linked from the main site navigation.
+    Restore checkpoint: locked/vocabulary-lexicon-quest-locked.html
+  -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AP Micro Lexicon Quest</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --quest-ink: #1f2f3a;
+      --quest-muted: #5c6b73;
+      --quest-line: #d8e0e5;
+      --quest-paper: #fbfaf6;
+      --quest-surface: #ffffff;
+      --quest-blue: #315d73;
+      --quest-blue-dark: #244759;
+      --quest-green: #557566;
+      --quest-gold: #b98b3b;
+      --quest-red: #a85048;
+      --quest-lavender: #f1eef8;
+      --quest-mint: #edf5f0;
+      --quest-sky: #e9f1f5;
+      --quest-shadow: 0 14px 34px rgba(31, 47, 58, 0.09);
+    }
+
+    .quest-shell {
+      width: min(1180px, calc(100% - 2rem));
+      padding-top: clamp(1.25rem, 3vw, 2rem);
+    }
+
+    .quest-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.8fr);
+      gap: 1rem;
+      align-items: stretch;
+      margin-bottom: 1rem;
+    }
+
+    .quest-title-panel,
+    .quest-progress-panel,
+    .quest-panel,
+    .quest-card,
+    .term-card,
+    .mode-button,
+    .choice-button,
+    .chapter-button,
+    .summary-tile {
+      border: 1px solid var(--quest-line);
+      border-radius: 8px;
+      background: var(--quest-surface);
+      box-shadow: var(--quest-shadow);
+    }
+
+    .quest-title-panel {
+      padding: clamp(1.6rem, 4vw, 2.6rem);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(233, 241, 245, 0.9)),
+        var(--quest-surface);
+    }
+
+    .quest-title-panel h1 {
+      margin-bottom: 0.35rem;
+    }
+
+    .quest-subtitle {
+      color: var(--quest-blue-dark);
+      font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+      font-weight: 800;
+    }
+
+    .quest-intro {
+      max-width: 74ch;
+      color: var(--quest-muted);
+      font-size: 1.02rem;
+    }
+
+    .quest-progress-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.1rem;
+      background: #fffdf8;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.65rem;
+    }
+
+    .score-box {
+      min-height: 5.3rem;
+      padding: 0.8rem;
+      border: 1px solid var(--quest-line);
+      border-radius: 8px;
+      background: var(--quest-surface);
+    }
+
+    .score-label {
+      display: block;
+      color: var(--quest-muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .score-value {
+      display: block;
+      color: var(--quest-blue-dark);
+      font-size: 1.75rem;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .quest-toolbar,
+    .button-row.quest-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+    }
+
+    .quest-button,
+    .quest-link-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.65rem;
+      padding: 0.65rem 0.95rem;
+      border: 1px solid var(--quest-blue);
+      border-radius: 8px;
+      background: var(--quest-blue);
+      color: #fff;
+      font: inherit;
+      font-size: 0.96rem;
+      font-weight: 800;
+      line-height: 1.15;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .quest-button:hover,
+    .quest-button:focus-visible,
+    .quest-link-button:hover,
+    .quest-link-button:focus-visible {
+      background: var(--quest-blue-dark);
+      outline: 3px solid rgba(49, 93, 115, 0.18);
+      outline-offset: 2px;
+    }
+
+    .quest-button.secondary,
+    .quest-link-button.secondary {
+      border-color: var(--quest-line);
+      background: var(--quest-surface);
+      color: var(--quest-ink);
+    }
+
+    .quest-button.secondary:hover,
+    .quest-button.secondary:focus-visible,
+    .quest-link-button.secondary:hover,
+    .quest-link-button.secondary:focus-visible,
+    .quest-button.secondary.active {
+      background: var(--quest-sky);
+    }
+
+    .quest-button.success {
+      border-color: var(--quest-green);
+      background: var(--quest-green);
+    }
+
+    .quest-button.warning {
+      border-color: var(--quest-red);
+      background: var(--quest-red);
+    }
+
+    .quest-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.58;
+    }
+
+    .quest-section {
+      margin-bottom: 1rem;
+    }
+
+    .quest-section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: flex-end;
+      margin-bottom: 0.75rem;
+    }
+
+    .quest-section-header p {
+      max-width: 72ch;
+      color: var(--quest-muted);
+    }
+
+    .chapter-grid,
+    .mode-grid,
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.8rem;
+    }
+
+    .chapter-button,
+    .mode-button {
+      display: flex;
+      width: 100%;
+      min-height: 8.5rem;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 1rem;
+      color: var(--quest-ink);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .chapter-button:hover,
+    .chapter-button:focus-visible,
+    .mode-button:hover,
+    .mode-button:focus-visible,
+    .chapter-button.active,
+    .mode-button.active {
+      border-color: var(--quest-blue);
+      background: var(--quest-sky);
+      outline: none;
+    }
+
+    .chapter-button strong,
+    .mode-button strong {
+      display: block;
+      color: var(--quest-blue-dark);
+      font-size: 1.02rem;
+      line-height: 1.2;
+    }
+
+    .chapter-button span,
+    .mode-button span {
+      color: var(--quest-muted);
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .quest-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 1.8rem;
+      padding: 0.25rem 0.55rem;
+      border: 1px solid var(--quest-line);
+      border-radius: 999px;
+      background: var(--quest-surface);
+      color: var(--quest-muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .quest-badge.green {
+      border-color: rgba(85, 117, 102, 0.28);
+      background: var(--quest-mint);
+      color: #37584a;
+    }
+
+    .quest-badge.gold {
+      border-color: rgba(185, 139, 59, 0.28);
+      background: #fff7e8;
+      color: #79571d;
+    }
+
+    .quest-badge.red {
+      border-color: rgba(168, 80, 72, 0.25);
+      background: #fff0ef;
+      color: #88433d;
+    }
+
+    .quest-panel {
+      padding: clamp(1rem, 3vw, 1.35rem);
+    }
+
+    .game-topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .progress-track {
+      overflow: hidden;
+      height: 0.7rem;
+      border-radius: 999px;
+      background: #e7edf0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--quest-green), var(--quest-blue));
+      transition: width 180ms ease;
+    }
+
+    .term-card {
+      min-height: 18rem;
+      padding: clamp(1.25rem, 4vw, 2rem);
+      box-shadow: none;
+    }
+
+    .term-card .term {
+      color: var(--quest-blue-dark);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      line-height: 1.08;
+    }
+
+    .term-definition {
+      color: var(--quest-ink);
+      font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+      line-height: 1.45;
+    }
+
+    .hint-box,
+    .mistake-box {
+      margin-top: 1rem;
+      padding: 0.85rem;
+      border-radius: 8px;
+      line-height: 1.45;
+    }
+
+    .hint-box {
+      border: 1px solid rgba(185, 139, 59, 0.3);
+      background: #fff8ea;
+      color: #644817;
+    }
+
+    .mistake-box {
+      border: 1px solid rgba(168, 80, 72, 0.22);
+      background: #fff3f2;
+      color: #713932;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.7rem;
+      margin-top: 1rem;
+    }
+
+    .choice-button {
+      width: 100%;
+      min-height: 5rem;
+      padding: 0.9rem;
+      color: var(--quest-ink);
+      font: inherit;
+      text-align: left;
+      box-shadow: none;
+      cursor: pointer;
+    }
+
+    .choice-button:hover,
+    .choice-button:focus-visible {
+      border-color: var(--quest-blue);
+      background: var(--quest-sky);
+      outline: none;
+    }
+
+    .choice-button.correct {
+      border-color: var(--quest-green);
+      background: var(--quest-mint);
+    }
+
+    .choice-button.incorrect {
+      border-color: var(--quest-red);
+      background: #fff0ef;
+    }
+
+    .feedback-box {
+      margin-top: 1rem;
+      padding: 0.85rem;
+      border-radius: 8px;
+      background: var(--quest-sky);
+      color: var(--quest-ink);
+      font-weight: 700;
+    }
+
+    .clock-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin: 0 0 1rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid rgba(185, 139, 59, 0.34);
+      border-radius: 8px;
+      background: #fff8ea;
+    }
+
+    .clock-label {
+      color: #76551f;
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .clock-time {
+      color: var(--quest-blue-dark);
+      font-size: clamp(2.1rem, 7vw, 4.75rem);
+      font-weight: 900;
+      letter-spacing: 0;
+      line-height: 0.95;
+      white-space: nowrap;
+    }
+
+    .clock-bar {
+      overflow: hidden;
+      flex: 1 1 auto;
+      height: 1rem;
+      min-width: 8rem;
+      border-radius: 999px;
+      background: rgba(185, 139, 59, 0.2);
+    }
+
+    .clock-bar-fill {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--quest-green), var(--quest-gold));
+      transition: width 180ms ease;
+    }
+
+    .term-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .mini-term {
+      padding: 0.9rem;
+      border: 1px solid var(--quest-line);
+      border-radius: 8px;
+      background: var(--quest-surface);
+    }
+
+    .mini-term strong {
+      display: block;
+      color: var(--quest-blue-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .mini-term p {
+      color: var(--quest-muted);
+      font-size: 0.94rem;
+      line-height: 1.45;
+    }
+
+    .summary-tile {
+      min-height: 7rem;
+      padding: 1rem;
+      box-shadow: none;
+    }
+
+    .summary-tile strong {
+      display: block;
+      color: var(--quest-blue-dark);
+      font-size: 1.7rem;
+      line-height: 1;
+    }
+
+    .summary-tile span {
+      color: var(--quest-muted);
+      font-weight: 800;
+    }
+
+    .empty-state {
+      padding: 1.25rem;
+      border: 1px dashed var(--quest-line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.68);
+      color: var(--quest-muted);
+    }
+
+    @media (max-width: 900px) {
+      .quest-hero,
+      .chapter-grid,
+      .mode-grid,
+      .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 680px) {
+      .quest-shell {
+        width: min(100% - 1rem, 1180px);
+      }
+
+      .quest-hero,
+      .chapter-grid,
+      .mode-grid,
+      .summary-grid,
+      .choice-grid,
+      .term-list {
+        grid-template-columns: 1fr;
+      }
+
+      .quest-section-header,
+      .game-topline {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .chapter-button,
+      .mode-button {
+        min-height: auto;
+      }
+
+      .clock-strip {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .clock-time {
+        white-space: normal;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">AP Microeconomics</a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="intro.html">Intro</a>
+      <a href="chapter1.html">Chapter 1</a>
+      <a href="chapter2.html">Chapter 2</a>
+      <a href="chapter3.html">Chapter 3</a>
+      <a href="chapter4.html">Chapter 4</a>
+      <a href="vocabulary.html" aria-current="page">Vocabulary</a>
+      <a href="submission.html">Submit</a>
+    </nav>
+  </header>
+
+  <main class="quest-shell">
+    <div id="root">
+      <section class="quest-panel" aria-live="polite">
+        <p class="eyebrow">Vocabulary Game</p>
+        <h1>AP Micro Lexicon Quest</h1>
+        <p class="quest-intro">Loading the interactive vocabulary game...</p>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>AP Microeconomics Summer Assignment</p>
+  </footer>
+
+  <!-- The playable app below runs locally from this file. The large text/babel block is kept as readable source data and is not required to load from a CDN. -->
+  <script type="text/babel">
+    const { useEffect, useMemo, useState } = React;
+
+    const chapters = [
+      "Chapter 1: Ten Principles of Economics",
+      "Chapter 2: Thinking Like an Economist",
+      "Chapter 3: Interdependence and the Gains from Trade",
+      "Chapter 4: The Market Forces of Supply and Demand"
+    ];
+
+    const vocabTerms = [
+      {
+        id: "ch1-scarcity",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Scarcity",
+        definition: "The property of having limited resources and unlimited wants.",
+        difficulty: "easy",
+        hint: "The basic economic problem.",
+        commonMistake: "Do not confuse scarcity with shortage. Scarcity is always present because resources are limited."
+      },
+      {
+        id: "ch1-economics",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Economics",
+        definition: "The study of how society manages its scarce resources.",
+        difficulty: "easy",
+        hint: "The study of choices under scarcity.",
+        commonMistake: "Economics is not just about money; it is about choices, incentives, and trade-offs."
+      },
+      {
+        id: "ch1-efficiency",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Efficiency",
+        definition: "The property of society getting the most from its scarce resources.",
+        difficulty: "medium",
+        hint: "Getting the largest total benefit from limited resources.",
+        commonMistake: "Efficiency is about total output or total benefit, not equal distribution."
+      },
+      {
+        id: "ch1-equality",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Equality",
+        definition: "The property of distributing economic prosperity uniformly among society's members.",
+        difficulty: "medium",
+        hint: "How evenly benefits are shared.",
+        commonMistake: "Equality is not the same as efficiency. Sometimes policies improve one while reducing the other."
+      },
+      {
+        id: "ch1-rational",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Rational",
+        definition: "Systematically and purposefully doing the best you can to achieve your objectives.",
+        difficulty: "easy",
+        hint: "Making purposeful choices to reach a goal.",
+        commonMistake: "Rational does not mean perfect. It means trying to make the best choice given your goals and information."
+      },
+      {
+        id: "ch1-opportunity-cost",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Opportunity Cost",
+        definition: "Whatever is given up to get something else.",
+        difficulty: "easy",
+        hint: "The value of the next best alternative.",
+        commonMistake: "Opportunity cost is not always money. It can include time, effort, or the next best choice."
+      },
+      {
+        id: "ch1-marginal-changes",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Marginal Changes",
+        definition: "Incremental adjustments to an existing plan.",
+        difficulty: "medium",
+        hint: "Small additional changes.",
+        commonMistake: "Marginal means additional, not unimportant."
+      },
+      {
+        id: "ch1-incentive",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Incentive",
+        definition: "Something that induces a person to act.",
+        difficulty: "easy",
+        hint: "A reason to do something.",
+        commonMistake: "Incentives can be rewards or penalties."
+      },
+      {
+        id: "ch1-market-economy",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Market Economy",
+        definition: "An economic system where the interaction of households and firms in markets determines the allocation of resources.",
+        difficulty: "medium",
+        hint: "Resources are allocated through decentralized decisions.",
+        commonMistake: "A market economy does not mean there are no rules or government at all."
+      },
+      {
+        id: "ch1-property-rights",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Property Rights",
+        definition: "The ability of an individual to own and exercise control over scarce resources.",
+        difficulty: "medium",
+        hint: "The right to own and control resources.",
+        commonMistake: "Property rights matter because people are more likely to invest and trade when ownership is protected."
+      },
+      {
+        id: "ch1-invisible-hand",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Invisible Hand",
+        definition: "The principle that self-interested market participants may unknowingly maximize the welfare of society as a whole.",
+        difficulty: "hard",
+        hint: "Self-interest can sometimes lead to broader social benefits.",
+        commonMistake: "The invisible hand does not mean markets always work perfectly."
+      },
+      {
+        id: "ch1-market-failure",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Market Failure",
+        definition: "A situation in which the market fails to allocate resources efficiently.",
+        difficulty: "medium",
+        hint: "When markets do not produce the efficient outcome.",
+        commonMistake: "Market failure does not mean businesses failed. It means the market outcome is inefficient."
+      },
+      {
+        id: "ch1-externality",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Externality",
+        definition: "When one person's actions have an impact on a bystander.",
+        difficulty: "medium",
+        hint: "A side effect on someone not directly involved.",
+        commonMistake: "Externalities can be negative, like pollution, or positive, like education."
+      },
+      {
+        id: "ch1-market-power",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Market Power",
+        definition: "The ability of an individual or group to substantially influence market prices.",
+        difficulty: "medium",
+        hint: "Power to affect price.",
+        commonMistake: "Market power is different from competition. More market power usually means less price-taking behavior."
+      },
+      {
+        id: "ch1-monopoly",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Monopoly",
+        definition: "A case in which there is only one seller in the market.",
+        difficulty: "easy",
+        hint: "One seller.",
+        commonMistake: "A monopoly is not just a large company; it is a market with only one seller."
+      },
+      {
+        id: "ch1-productivity",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Productivity",
+        definition: "The amount of goods and services produced from each unit of labor input.",
+        difficulty: "medium",
+        hint: "Output per worker or per unit of labor.",
+        commonMistake: "Productivity is about output per input, not just total output."
+      },
+      {
+        id: "ch1-inflation",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Inflation",
+        definition: "An increase in the overall level of prices.",
+        difficulty: "easy",
+        hint: "Prices rising across the economy.",
+        commonMistake: "Inflation is not the price of one good rising. It is a general increase in prices."
+      },
+      {
+        id: "ch1-business-cycle",
+        chapter: "Chapter 1: Ten Principles of Economics",
+        term: "Business Cycle",
+        definition: "Fluctuations in economic activity.",
+        difficulty: "medium",
+        hint: "Ups and downs in the economy.",
+        commonMistake: "The business cycle refers to the overall economy, not one business opening and closing."
+      },
+
+      {
+        id: "ch2-scientific-method",
+        chapter: "Chapter 2: Thinking Like an Economist",
+        term: "Scientific Method",
+        definition: "The dispassionate development and testing of theories about how the world works.",
+        difficulty: "medium",
+        hint: "Testing theories with evidence.",
+        commonMistake: "Economists use models and evidence; they do not just give opinions."
+      },
+      {
+        id: "ch2-economic-models",
+        chapter: "Chapter 2: Thinking Like an Economist",
+        term: "Economic Models",
+        definition: "Simplified versions of reality, often composed of diagrams and equations, used to help understand the world.",
+        difficulty: "medium",
+        hint: "Simplified tools for understanding complex reality.",
+        commonMistake: "A model is not supposed to include every detail. It simplifies reality to focus on what matters."
+      },
+      {
+        id: "ch2-circular-flow-diagram",
+        chapter: "Chapter 2: Thinking Like an Economist",
+        term: "Circular-Flow Diagram",
+        definition: "A visual model of the economy that shows how dollars flow through markets among households and firms.",
+        difficulty: "medium",
+        hint: "Shows flows between households and firms.",
+        commonMistake: "The circular-flow diagram is a simplified model, not a complete picture of the entire economy."
+      },
+      {
+        id: "ch2-factors-of-production",
+        chapter: "Chapter 2: Thinking Like an Economist",
+        term: "Factors of Production",
+        definition: "Inputs used to produce goods and services, such as land, labor, and capital.",
+        difficulty: "easy",
+        hint: "Resources used to produce goods and services.",
+        commonMistake: "Factors of production are inputs, not finished goods."
+      },
+      {
+        id: "ch2-ppf",
+        chapter: "Chapter 2: Thinking Like an Economist",
+        term: "Production Possibilities Frontier",
+        definition: "A graph showing the combinations of output an economy can possibly produce given its available factors and technology.",
+        difficulty: "hard",
+        hint: "A graph of trade-offs and possible production combinations.",
+        commonMistake: "The PPF shows what is possible, not necessarily what society should choose."
+      },
+      {
+        id: "ch2-microeconomics",
+        chapter: "Chapter 2: Thinking Like an Economist",
+        term: "Microeconomics",
+        definition: "The study of how households and firms make decisions and interact in specific markets.",
+        difficulty: "easy",
+        hint: "Small-scale economics: individuals, firms, and markets.",
+        commonMistake: "Microeconomics is not easier economics; it focuses on individual decision-makers and specific markets."
+      },
+      {
+        id: "ch2-macroeconomics",
+        chapter: "Chapter 2: Thinking Like an Economist",
+        term: "Macroeconomics",
+        definition: "The study of economy-wide phenomena like inflation, unemployment, and economic growth.",
+        difficulty: "easy",
+        hint: "Big-picture economics.",
+        commonMistake: "Macroeconomics studies the economy as a whole, not one firm or one market."
+      },
+      {
+        id: "ch2-positive-statements",
+        chapter: "Chapter 2: Thinking Like an Economist",
+        term: "Positive Statements",
+        definition: "Claims that attempt to describe the world as it is.",
+        difficulty: "medium",
+        hint: "Can be tested as true or false.",
+        commonMistake: "Positive does not mean good. It means descriptive or testable."
+      },
+      {
+        id: "ch2-normative-statements",
+        chapter: "Chapter 2: Thinking Like an Economist",
+        term: "Normative Statements",
+        definition: "Claims that attempt to prescribe how the world ought to be.",
+        difficulty: "medium",
+        hint: "Involves values or opinions about what should happen.",
+        commonMistake: "Normative does not mean normal. It means judgment-based or prescriptive."
+      },
+
+      {
+        id: "ch3-absolute-advantage",
+        chapter: "Chapter 3: Interdependence and the Gains from Trade",
+        term: "Absolute Advantage",
+        definition: "The ability to produce a good using fewer inputs than another producer.",
+        difficulty: "medium",
+        hint: "Who can produce more or use fewer inputs?",
+        commonMistake: "Absolute advantage is about productivity, not opportunity cost."
+      },
+      {
+        id: "ch3-comparative-advantage",
+        chapter: "Chapter 3: Interdependence and the Gains from Trade",
+        term: "Comparative Advantage",
+        definition: "The ability to produce a good at a lower opportunity cost than another producer.",
+        difficulty: "hard",
+        hint: "Who gives up less?",
+        commonMistake: "Comparative advantage is about lowest opportunity cost, not who produces the most."
+      },
+      {
+        id: "ch3-gains-from-trade",
+        chapter: "Chapter 3: Interdependence and the Gains from Trade",
+        term: "Gains from Trade",
+        definition: "The increase in total production due to specialization allowed by trade.",
+        difficulty: "medium",
+        hint: "The extra benefit created when people specialize and trade.",
+        commonMistake: "Trade can benefit both sides even if one side has an absolute advantage in everything."
+      },
+      {
+        id: "ch3-imports",
+        chapter: "Chapter 3: Interdependence and the Gains from Trade",
+        term: "Imports",
+        definition: "Goods produced abroad and sold domestically.",
+        difficulty: "easy",
+        hint: "Goods brought into the country.",
+        commonMistake: "Imports come in."
+      },
+      {
+        id: "ch3-exports",
+        chapter: "Chapter 3: Interdependence and the Gains from Trade",
+        term: "Exports",
+        definition: "Goods produced domestically and sold abroad.",
+        difficulty: "easy",
+        hint: "Goods sent out to other countries.",
+        commonMistake: "Exports exit."
+      },
+
+      {
+        id: "ch4-market",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Market",
+        definition: "A group of buyers and sellers of a particular good or service.",
+        difficulty: "easy",
+        hint: "Where buyers and sellers interact.",
+        commonMistake: "A market does not have to be a physical place."
+      },
+      {
+        id: "ch4-competitive-market",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Competitive Market",
+        definition: "A market with many buyers and sellers so that each has a negligible impact on the price.",
+        difficulty: "medium",
+        hint: "Many buyers, many sellers, little individual price control.",
+        commonMistake: "Competitive markets have price takers, not price makers."
+      },
+      {
+        id: "ch4-quantity-demanded",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Quantity Demanded",
+        definition: "The amount of a good buyers are willing and able to purchase.",
+        difficulty: "medium",
+        hint: "A specific amount buyers want at a specific price.",
+        commonMistake: "Quantity demanded is not the same as demand. Quantity demanded is a point on the curve."
+      },
+      {
+        id: "ch4-law-of-demand",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Law of Demand",
+        definition: "The claim that, other things equal, the quantity demanded of a good falls when the price rises.",
+        difficulty: "easy",
+        hint: "Price up, quantity demanded down.",
+        commonMistake: "The law of demand describes movement along the demand curve, not a shift of demand."
+      },
+      {
+        id: "ch4-demand-schedule",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Demand Schedule",
+        definition: "A table showing the relationship between a good's price and its quantity demanded.",
+        difficulty: "easy",
+        hint: "Demand information in table form.",
+        commonMistake: "A demand schedule is a table; a demand curve is a graph."
+      },
+      {
+        id: "ch4-demand-curve",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Demand Curve",
+        definition: "A graph of the relationship between a good's price and its quantity demanded.",
+        difficulty: "easy",
+        hint: "Usually slopes downward.",
+        commonMistake: "A demand curve shows price and quantity demanded, not supply."
+      },
+      {
+        id: "ch4-normal-good",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Normal Good",
+        definition: "A good for which an increase in income leads to an increase in demand.",
+        difficulty: "medium",
+        hint: "Income rises, demand rises.",
+        commonMistake: "Normal good does not mean ordinary good. It means demand increases when income increases."
+      },
+      {
+        id: "ch4-inferior-good",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Inferior Good",
+        definition: "A good for which an increase in income leads to a decrease in demand.",
+        difficulty: "medium",
+        hint: "Income rises, demand falls.",
+        commonMistake: "Inferior does not mean bad quality. It means consumers buy less of it when income rises."
+      },
+      {
+        id: "ch4-substitutes",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Substitutes",
+        definition: "Two goods for which an increase in the price of one leads to an increase in the demand for the other.",
+        difficulty: "medium",
+        hint: "Goods that can replace each other.",
+        commonMistake: "For substitutes, if one gets more expensive, demand for the other rises."
+      },
+      {
+        id: "ch4-complements",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Complements",
+        definition: "Two goods for which an increase in the price of one leads to a decrease in the demand for the other.",
+        difficulty: "medium",
+        hint: "Goods used together.",
+        commonMistake: "Complements move together. If one becomes more expensive, demand for the other usually falls."
+      },
+      {
+        id: "ch4-quantity-supplied",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Quantity Supplied",
+        definition: "The amount of a good sellers are willing and able to sell.",
+        difficulty: "medium",
+        hint: "A specific amount sellers want to sell at a specific price.",
+        commonMistake: "Quantity supplied is not the same as supply. Quantity supplied is a point on the curve."
+      },
+      {
+        id: "ch4-law-of-supply",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Law of Supply",
+        definition: "The claim that, other things equal, the quantity supplied of a good rises when the price rises.",
+        difficulty: "easy",
+        hint: "Price up, quantity supplied up.",
+        commonMistake: "The law of supply describes movement along the supply curve, not a shift of supply."
+      },
+      {
+        id: "ch4-supply-schedule",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Supply Schedule",
+        definition: "A table showing the relationship between a good's price and quantity supplied.",
+        difficulty: "easy",
+        hint: "Supply information in table form.",
+        commonMistake: "A supply schedule is a table; a supply curve is a graph."
+      },
+      {
+        id: "ch4-supply-curve",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Supply Curve",
+        definition: "A graph showing the relationship between a good's price and quantity supplied.",
+        difficulty: "easy",
+        hint: "Usually slopes upward.",
+        commonMistake: "A supply curve shows sellers' behavior, not buyers' behavior."
+      },
+      {
+        id: "ch4-equilibrium",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Equilibrium",
+        definition: "A situation in which the price has reached the level where quantity supplied equals quantity demanded.",
+        difficulty: "medium",
+        hint: "Where supply and demand balance.",
+        commonMistake: "Equilibrium is not where price is lowest. It is where quantity supplied equals quantity demanded."
+      },
+      {
+        id: "ch4-equilibrium-price",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Equilibrium Price",
+        definition: "The price that balances supply and demand.",
+        difficulty: "medium",
+        hint: "The market-clearing price.",
+        commonMistake: "Equilibrium price is found where supply and demand intersect."
+      },
+      {
+        id: "ch4-equilibrium-quantity",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Equilibrium Quantity",
+        definition: "The quantity that balances supply and demand.",
+        difficulty: "medium",
+        hint: "The amount bought and sold at equilibrium.",
+        commonMistake: "Equilibrium quantity is the quantity at the intersection of supply and demand."
+      },
+      {
+        id: "ch4-surplus",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Surplus",
+        definition: "A situation where quantity supplied is greater than quantity demanded.",
+        difficulty: "medium",
+        hint: "Too much supply.",
+        commonMistake: "A surplus usually happens when price is above equilibrium."
+      },
+      {
+        id: "ch4-shortage",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Shortage",
+        definition: "A situation where quantity demanded is greater than quantity supplied.",
+        difficulty: "medium",
+        hint: "Too much demand.",
+        commonMistake: "A shortage usually happens when price is below equilibrium."
+      },
+      {
+        id: "ch4-law-of-supply-and-demand",
+        chapter: "Chapter 4: The Market Forces of Supply and Demand",
+        term: "Law of Supply and Demand",
+        definition: "The claim that price adjusts to bring the quantity supplied and quantity demanded into balance.",
+        difficulty: "medium",
+        hint: "Prices move markets toward equilibrium.",
+        commonMistake: "This law explains why prices tend to rise during shortages and fall during surpluses."
+      }
+    ];
+
+    const vocabulary = vocabTerms;
+
+    const confusingPairs = [
+      ["ch1-scarcity", "ch4-shortage"],
+      ["ch1-efficiency", "ch1-equality"],
+      ["ch3-absolute-advantage", "ch3-comparative-advantage"],
+      ["ch2-positive-statements", "ch2-normative-statements"],
+      ["ch4-quantity-demanded", "ch4-demand-curve"],
+      ["ch4-quantity-supplied", "ch4-supply-curve"],
+      ["ch4-normal-good", "ch4-inferior-good"],
+      ["ch4-substitutes", "ch4-complements"],
+      ["ch4-equilibrium-price", "ch4-equilibrium-quantity"],
+      ["ch2-microeconomics", "ch2-macroeconomics"]
+    ];
+
+    const storageKey = "apMicroLexiconQuest";
+
+    function loadProgress() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(storageKey));
+        return saved || {};
+      } catch {
+        return {};
+      }
+    }
+
+    function shuffle(items) {
+      return [...items].sort(() => Math.random() - 0.5);
+    }
+
+    function pickDistractors(correct, count = 3) {
+      return shuffle(vocabulary.filter((item) => item.id !== correct.id)).slice(0, count);
+    }
+
+    function chapterShortName(chapter) {
+      return chapter.replace(": ", "\n");
+    }
+
+    function App() {
+      const [selectedChapter, setSelectedChapter] = useState("all");
+      const [mode, setMode] = useState("dashboard");
+      const [progress, setProgress] = useState(() => ({
+        mastered: [],
+        missed: [],
+        completedChapters: [],
+        bestScore: 0,
+        ...loadProgress()
+      }));
+      const [game, setGame] = useState(null);
+
+      useEffect(() => {
+        localStorage.setItem(storageKey, JSON.stringify(progress));
+      }, [progress]);
+
+      const selectedTerms = useMemo(() => {
+        if (selectedChapter === "all") return vocabulary;
+        return vocabulary.filter((item) => item.chapter === selectedChapter);
+      }, [selectedChapter]);
+
+      const masteredSet = new Set(progress.mastered);
+      const missedSet = new Set(progress.missed);
+      const masteredTerms = vocabulary.filter((term) => masteredSet.has(term.id));
+      const missedTerms = vocabulary.filter((term) => missedSet.has(term.id));
+
+      function updateTerm(id, result) {
+        setProgress((current) => {
+          const mastered = new Set(current.mastered);
+          const missed = new Set(current.missed);
+          if (result === "mastered") {
+            mastered.add(id);
+            missed.delete(id);
+          } else {
+            missed.add(id);
+          }
+          return { ...current, mastered: [...mastered], missed: [...missed] };
+        });
+      }
+
+      function completeChapterIfReady(score, total, terms = selectedTerms) {
+        setProgress((current) => {
+          const scorePercent = total ? Math.round((score / total) * 100) : 0;
+          const bestScore = Math.max(current.bestScore || 0, scorePercent);
+          const chapterIds = terms.map((term) => term.id);
+          const chapterName = selectedChapter !== "all" ? selectedChapter : null;
+          const mastered = new Set(current.mastered);
+          const completedChapters = new Set(current.completedChapters || []);
+          if (chapterName && chapterIds.every((id) => mastered.has(id))) {
+            completedChapters.add(chapterName);
+          }
+          return { ...current, bestScore, completedChapters: [...completedChapters] };
+        });
+      }
+
+      function startFlashcards(terms = selectedTerms) {
+        setGame({ type: "flashcards", terms: shuffle(terms), index: 0, flipped: false, score: 0 });
+        setMode("flashcards");
+      }
+
+      function startQuiz(type = "multiple-choice", terms = selectedTerms, limit = 12) {
+        const quizTerms = shuffle(terms).slice(0, Math.min(limit, terms.length));
+        setGame({
+          type,
+          terms: quizTerms,
+          index: 0,
+          score: 0,
+          answered: false,
+          selected: null,
+          choices: shuffle([quizTerms[0], ...pickDistractors(quizTerms[0])]),
+          timeLeft: type === "clock" ? 60 : null
+        });
+        setMode(type);
+      }
+
+      function startPairs() {
+        const availablePairs = confusingPairs
+          .map((pair) => pair.map((id) => vocabulary.find((term) => term.id === id)))
+          .filter((pair) => pair.every(Boolean));
+        const pairTerms = shuffle(availablePairs).slice(0, 8);
+        setGame({ type: "pairs", pairs: pairTerms, index: 0, score: 0, answered: false, selected: null });
+        setMode("pairs");
+      }
+
+      function startMistakeBank() {
+        const terms = missedTerms.length ? missedTerms : selectedTerms.filter((term) => term.difficulty !== "easy");
+        startFlashcards(terms);
+        setMode("mistakes");
+      }
+
+      function startFinalChallenge() {
+        startQuiz("final", vocabulary, 20);
+      }
+
+      function resetProgress() {
+        const clean = { mastered: [], missed: [], completedChapters: [], bestScore: 0 };
+        setProgress(clean);
+        setGame(null);
+        setMode("dashboard");
+      }
+
+      useEffect(() => {
+        if (!game || game.type !== "clock" || mode !== "clock" || game.timeLeft === null || game.timeLeft <= 0) return;
+        const timer = window.setInterval(() => {
+          setGame((current) => {
+            if (!current || current.type !== "clock") return current;
+            if (current.timeLeft <= 1) {
+              completeChapterIfReady(current.score, current.terms.length, current.terms);
+              return { ...current, timeLeft: 0 };
+            }
+            return { ...current, timeLeft: current.timeLeft - 1 };
+          });
+        }, 1000);
+        return () => window.clearInterval(timer);
+      }, [game?.type, game?.timeLeft, mode]);
+
+      const stats = {
+        total: vocabulary.length,
+        selected: selectedTerms.length,
+        mastered: masteredTerms.length,
+        missed: missedTerms.length,
+        bestScore: progress.bestScore || 0,
+        completed: progress.completedChapters?.length || 0
+      };
+
+      return (
+        <>
+          <Hero stats={stats} onReset={resetProgress} />
+          <Dashboard
+            selectedChapter={selectedChapter}
+            setSelectedChapter={setSelectedChapter}
+            selectedTerms={selectedTerms}
+            masteredSet={masteredSet}
+            progress={progress}
+            startFlashcards={startFlashcards}
+            startQuiz={startQuiz}
+            startPairs={startPairs}
+            startMistakeBank={startMistakeBank}
+            startFinalChallenge={startFinalChallenge}
+            setMode={setMode}
+          />
+          {mode === "flashcards" && game && <Flashcards game={game} setGame={setGame} updateTerm={updateTerm} completeChapterIfReady={completeChapterIfReady} setMode={setMode} />}
+          {(mode === "multiple-choice" || mode === "clock" || mode === "final") && game && <Quiz game={game} setGame={setGame} updateTerm={updateTerm} completeChapterIfReady={completeChapterIfReady} setMode={setMode} />}
+          {mode === "pairs" && game && <Pairs game={game} setGame={setGame} updateTerm={updateTerm} completeChapterIfReady={completeChapterIfReady} setMode={setMode} />}
+          {mode === "mistakes" && game && <Flashcards game={game} setGame={setGame} updateTerm={updateTerm} completeChapterIfReady={completeChapterIfReady} setMode={setMode} title="Mistake Bank Review" />}
+          {mode === "summary" && <Summary stats={stats} masteredTerms={masteredTerms} missedTerms={missedTerms} progress={progress} startMistakeBank={startMistakeBank} startFinalChallenge={startFinalChallenge} />}
+        </>
+      );
+    }
+
+    function Hero({ stats, onReset }) {
+      return (
+        <section className="quest-hero" aria-labelledby="quest-title">
+          <div className="quest-title-panel">
+            <p className="eyebrow">Vocabulary Game</p>
+            <h1 id="quest-title">AP Micro Lexicon Quest</h1>
+            <p className="quest-subtitle">Master the language before you master the graphs.</p>
+            <p className="quest-intro">
+              Welcome to Lexicon Quest. Your job is to master the essential vocabulary from the first four chapters of AP Microeconomics. These terms are the building blocks of scarcity, choice, trade, supply, demand, and market equilibrium.
+            </p>
+          </div>
+          <aside className="quest-progress-panel" aria-label="Saved progress">
+            <div className="score-grid">
+              <div className="score-box"><span className="score-label">Mastered</span><span className="score-value">{stats.mastered}</span></div>
+              <div className="score-box"><span className="score-label">Missed</span><span className="score-value">{stats.missed}</span></div>
+              <div className="score-box"><span className="score-label">Best Score</span><span className="score-value">{stats.bestScore}%</span></div>
+              <div className="score-box"><span className="score-label">Chapters</span><span className="score-value">{stats.completed}/4</span></div>
+            </div>
+            <div>
+              <div className="progress-track" aria-label={`${stats.mastered} of ${stats.total} terms mastered`}>
+                <div className="progress-fill" style={{ width: `${Math.round((stats.mastered / stats.total) * 100)}%` }}></div>
+              </div>
+            </div>
+            <button className="quest-button secondary" type="button" onClick={onReset}>Reset Session Progress</button>
+          </aside>
+        </section>
+      );
+    }
+
+    function Dashboard(props) {
+      const chapterCards = chapters.map((chapter) => {
+        const terms = vocabulary.filter((term) => term.chapter === chapter);
+        const masteredCount = terms.filter((term) => props.masteredSet.has(term.id)).length;
+        return { chapter, terms, masteredCount };
+      });
+
+      return (
+        <>
+          <section className="quest-section" aria-labelledby="chapter-select">
+            <div className="quest-section-header">
+              <div>
+                <p className="eyebrow">Chapter Selection</p>
+                <h2 id="chapter-select">Choose Your Study Set</h2>
+                <p>Select one chapter for a focused round, or use all chapters when you are ready to mix everything together.</p>
+              </div>
+              <button className={`quest-button secondary ${props.selectedChapter === "all" ? "active" : ""}`} type="button" onClick={() => props.setSelectedChapter("all")}>All Chapters</button>
+            </div>
+            <div className="chapter-grid">
+              {chapterCards.map(({ chapter, terms, masteredCount }) => (
+                <button key={chapter} className={`chapter-button ${props.selectedChapter === chapter ? "active" : ""}`} type="button" onClick={() => props.setSelectedChapter(chapter)}>
+                  <strong>{chapterShortName(chapter)}</strong>
+                  <span>{terms.length} terms</span>
+                  <div className="badge-row">
+                    <span className="quest-badge green">{masteredCount} mastered</span>
+                    {props.progress.completedChapters?.includes(chapter) && <span className="quest-badge gold">Complete</span>}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="quest-section" aria-labelledby="mode-select">
+            <div className="quest-section-header">
+              <div>
+                <p className="eyebrow">Game Mode Selection</p>
+                <h2 id="mode-select">Pick a Quest Mode</h2>
+                <p>You are studying {props.selectedTerms.length} terms right now. Start with flashcards, then move into quizzes once the definitions feel familiar.</p>
+              </div>
+              <button className="quest-button secondary" type="button" onClick={() => props.setMode("summary")}>View Results</button>
+            </div>
+            <div className="mode-grid">
+              <button className="mode-button" type="button" onClick={() => props.startFlashcards()}>
+                <strong>Flashcard Mode</strong>
+                <span>Flip terms, use hints, and mark what you know.</span>
+                <span className="quest-badge">Low pressure</span>
+              </button>
+              <button className="mode-button" type="button" onClick={() => props.startQuiz("multiple-choice", props.selectedTerms, 12)}>
+                <strong>Multiple Choice</strong>
+                <span>Match each term to the best AP-style definition.</span>
+                <span className="quest-badge">12 questions</span>
+              </button>
+              <button className="mode-button" type="button" onClick={() => props.startQuiz("clock", props.selectedTerms, 14)}>
+                <strong>Beat the Clock</strong>
+                <span>Answer quickly while keeping your accuracy steady.</span>
+                <span className="quest-badge gold">60 seconds</span>
+              </button>
+              <button className="mode-button" type="button" onClick={props.startPairs}>
+                <strong>Confusing Pairs</strong>
+                <span>Practice terms students often mix up.</span>
+                <span className="quest-badge red">Precision round</span>
+              </button>
+              <button className="mode-button" type="button" onClick={props.startMistakeBank}>
+                <strong>Mistake Bank Review</strong>
+                <span>Revisit missed terms until they become sturdy.</span>
+                <span className="quest-badge">{props.progress.missed?.length || 0} saved</span>
+              </button>
+              <button className="mode-button" type="button" onClick={props.startFinalChallenge}>
+                <strong>Final Foundations Challenge</strong>
+                <span>A 20-question mixed review from all four chapters.</span>
+                <span className="quest-badge green">All chapters</span>
+              </button>
+            </div>
+          </section>
+        </>
+      );
+    }
+
+    function Flashcards({ game, setGame, updateTerm, completeChapterIfReady, setMode, title = "Flashcard Mode" }) {
+      const current = game.terms[game.index];
+      const percent = Math.round((game.index / game.terms.length) * 100);
+      if (!current) {
+        return <Results title={title} score={game.score} total={game.terms.length} setMode={setMode} />;
+      }
+      function mark(result) {
+        const nextScore = result === "mastered" ? game.score + 1 : game.score;
+        if (game.index + 1 >= game.terms.length) {
+          completeChapterIfReady(nextScore, game.terms.length, game.terms);
+        }
+        updateTerm(current.id, result);
+        setGame((old) => ({
+          ...old,
+          index: old.index + 1,
+          flipped: false,
+          score: result === "mastered" ? old.score + 1 : old.score
+        }));
+      }
+      return (
+        <section className="quest-section quest-panel" aria-labelledby="flashcard-title">
+          <GameTopline title={title} index={game.index + 1} total={game.terms.length} score={game.score} extra={`${percent}% complete`} setMode={setMode} />
+          <div className="progress-track"><div className="progress-fill" style={{ width: `${percent}%` }}></div></div>
+          <div className="term-card" style={{ marginTop: "1rem" }}>
+            <div className="badge-row">
+              <span className="quest-badge">{current.chapter.split(":")[0]}</span>
+              <span className="quest-badge gold">{current.difficulty}</span>
+            </div>
+            <p className="term" style={{ marginTop: "1rem" }}>{current.term}</p>
+            {game.flipped ? (
+              <>
+                <p className="term-definition">{current.definition}</p>
+                <div className="mistake-box"><strong>Common mistake:</strong> {current.commonMistake}</div>
+              </>
+            ) : (
+              <div className="hint-box"><strong>Hint:</strong> {current.hint}</div>
+            )}
+          </div>
+          <div className="button-row quest-actions">
+            <button className="quest-button secondary" type="button" onClick={() => setGame((old) => ({ ...old, flipped: !old.flipped }))}>{game.flipped ? "Hide Definition" : "Flip Card"}</button>
+            <button className="quest-button success" type="button" onClick={() => mark("mastered")}>I Know This</button>
+            <button className="quest-button warning" type="button" onClick={() => mark("missed")}>Review Again</button>
+          </div>
+        </section>
+      );
+    }
+
+    function Quiz({ game, setGame, updateTerm, completeChapterIfReady, setMode }) {
+      const current = game.terms[game.index];
+      const isTimedOut = game.type === "clock" && game.timeLeft === 0;
+      const title = game.type === "clock" ? "Beat the Clock Mode" : game.type === "final" ? "Final Foundations Challenge" : "Multiple Choice Mode";
+      if (!current || isTimedOut) {
+        return <Results title={title} score={game.score} total={game.terms.length} setMode={setMode} />;
+      }
+      const percent = Math.round((game.index / game.terms.length) * 100);
+      function answer(choice) {
+        if (game.answered) return;
+        const correct = choice.id === current.id;
+        updateTerm(current.id, correct ? "mastered" : "missed");
+        setGame((old) => ({ ...old, selected: choice.id, answered: true, score: correct ? old.score + 1 : old.score }));
+      }
+      function next() {
+        const nextTerm = game.terms[game.index + 1];
+        if (!nextTerm) {
+          completeChapterIfReady(game.score, game.terms.length, game.terms);
+        }
+        setGame((old) => ({
+          ...old,
+          index: old.index + 1,
+          answered: false,
+          selected: null,
+          choices: nextTerm ? shuffle([nextTerm, ...pickDistractors(nextTerm)]) : []
+        }));
+      }
+      return (
+        <section className="quest-section quest-panel" aria-labelledby="quiz-title">
+          <GameTopline title={title} index={game.index + 1} total={game.terms.length} score={game.score} extra={game.type === "clock" ? `${game.timeLeft}s left` : `${percent}% complete`} setMode={setMode} />
+          <div className="progress-track"><div className="progress-fill" style={{ width: `${percent}%` }}></div></div>
+          <div className="term-card" style={{ marginTop: "1rem", minHeight: "auto" }}>
+            <span className="quest-badge">{current.chapter.split(":")[0]}</span>
+            <p className="term" style={{ marginTop: "0.75rem" }}>{current.term}</p>
+            <p className="quest-intro">Choose the best definition.</p>
+            <div className="choice-grid">
+              {game.choices.map((choice) => {
+                const className = game.answered
+                  ? choice.id === current.id
+                    ? "choice-button correct"
+                    : choice.id === game.selected
+                      ? "choice-button incorrect"
+                      : "choice-button"
+                  : "choice-button";
+                return <button key={choice.id} className={className} type="button" onClick={() => answer(choice)}>{choice.definition}</button>;
+              })}
+            </div>
+            {game.answered && (
+              <div className="feedback-box">
+                {game.selected === current.id ? "Correct. Nice work." : `Not quite. ${current.term}: ${current.definition}`}
+              </div>
+            )}
+          </div>
+          <div className="button-row quest-actions">
+            <button className="quest-button secondary" type="button" onClick={() => setMode("dashboard")}>Back to Dashboard</button>
+            <button className="quest-button" type="button" disabled={!game.answered} onClick={next}>Next Question</button>
+          </div>
+        </section>
+      );
+    }
+
+    function Pairs({ game, setGame, updateTerm, completeChapterIfReady, setMode }) {
+      const pair = game.pairs[game.index];
+      if (!pair) {
+        return <Results title="Confusing Pairs Mode" score={game.score} total={game.pairs.length} setMode={setMode} />;
+      }
+      const promptTerm = game.promptTerm || pair[Math.floor(Math.random() * pair.length)];
+      const otherTerm = pair.find((term) => term.id !== promptTerm.id);
+      const choices = game.pairChoices || shuffle(pair);
+      function answer(choice) {
+        if (game.answered) return;
+        const correct = choice.id === promptTerm.id;
+        updateTerm(promptTerm.id, correct ? "mastered" : "missed");
+        setGame((old) => ({ ...old, answered: true, selected: choice.id, promptTerm, pairChoices: choices, score: correct ? old.score + 1 : old.score }));
+      }
+      const lockedPrompt = game.promptTerm || promptTerm;
+      return (
+        <section className="quest-section quest-panel" aria-labelledby="pairs-title">
+          <GameTopline title="Confusing Pairs Mode" index={game.index + 1} total={game.pairs.length} score={game.score} extra="Precision practice" setMode={setMode} />
+          <div className="term-card" style={{ marginTop: "1rem", minHeight: "auto" }}>
+            <p className="quest-intro">Which definition matches this term?</p>
+            <p className="term">{lockedPrompt.term}</p>
+            <div className="badge-row">
+              <span className="quest-badge red">Often confused with {otherTerm.term}</span>
+            </div>
+            <div className="choice-grid">
+              {choices.map((choice) => {
+                const isCorrect = choice.id === lockedPrompt.id;
+                const className = game.answered
+                  ? isCorrect
+                    ? "choice-button correct"
+                    : choice.id === game.selected
+                      ? "choice-button incorrect"
+                      : "choice-button"
+                  : "choice-button";
+                return <button key={choice.id} className={className} type="button" onClick={() => answer(choice)}>{choice.definition}</button>;
+              })}
+            </div>
+            {game.answered && <div className="mistake-box"><strong>Watch for this:</strong> {lockedPrompt.commonMistake}</div>}
+          </div>
+          <div className="button-row quest-actions">
+            <button className="quest-button secondary" type="button" onClick={() => setMode("dashboard")}>Back to Dashboard</button>
+            <button className="quest-button" type="button" disabled={!game.answered} onClick={() => {
+              if (game.index + 1 >= game.pairs.length) {
+                completeChapterIfReady(game.score, game.pairs.length, vocabulary);
+              }
+              setGame((old) => ({ ...old, index: old.index + 1, answered: false, selected: null, promptTerm: null, pairChoices: null }));
+            }}>Next Pair</button>
+          </div>
+        </section>
+      );
+    }
+
+    function GameTopline({ title, index, total, score, extra, setMode }) {
+      return (
+        <div className="game-topline">
+          <div>
+            <p className="eyebrow">{extra}</p>
+            <h2>{title}</h2>
+          </div>
+          <div className="badge-row">
+            <span className="quest-badge">Question {Math.min(index, total)} of {total}</span>
+            <span className="quest-badge green">Score {score}</span>
+            <button className="quest-button secondary" type="button" onClick={() => setMode("dashboard")}>Dashboard</button>
+          </div>
+        </div>
+      );
+    }
+
+    function Results({ title, score, total, setMode }) {
+      const percent = total ? Math.round((score / total) * 100) : 0;
+      return (
+        <section className="quest-section quest-panel" aria-labelledby="results-title">
+          <p className="eyebrow">Results / Progress Summary</p>
+          <h2 id="results-title">{title} Complete</h2>
+          <div className="summary-grid" style={{ marginTop: "1rem" }}>
+            <div className="summary-tile"><strong>{score}</strong><span>Correct answers</span></div>
+            <div className="summary-tile"><strong>{total}</strong><span>Total prompts</span></div>
+            <div className="summary-tile"><strong>{percent}%</strong><span>Round score</span></div>
+            <div className="summary-tile"><strong>{percent >= 85 ? "Ready" : "Review"}</strong><span>Next step</span></div>
+          </div>
+          <div className="button-row quest-actions">
+            <button className="quest-button" type="button" onClick={() => setMode("dashboard")}>Choose Another Mode</button>
+            <button className="quest-button secondary" type="button" onClick={() => setMode("summary")}>Open Full Summary</button>
+          </div>
+        </section>
+      );
+    }
+
+    function Summary({ stats, masteredTerms, missedTerms, progress, startMistakeBank, startFinalChallenge }) {
+      return (
+        <section className="quest-section quest-panel" aria-labelledby="summary-title">
+          <p className="eyebrow">Results / Progress Summary</p>
+          <h2 id="summary-title">Your Lexicon Quest Progress</h2>
+          <div className="summary-grid" style={{ marginTop: "1rem" }}>
+            <div className="summary-tile"><strong>{stats.mastered}</strong><span>Terms mastered</span></div>
+            <div className="summary-tile"><strong>{stats.missed}</strong><span>Terms to review</span></div>
+            <div className="summary-tile"><strong>{stats.bestScore}%</strong><span>Best quiz score</span></div>
+            <div className="summary-tile"><strong>{stats.completed}</strong><span>Completed chapters</span></div>
+          </div>
+          <div className="button-row quest-actions">
+            <button className="quest-button" type="button" onClick={startMistakeBank}>Review Mistake Bank</button>
+            <button className="quest-button secondary" type="button" onClick={startFinalChallenge}>Final Foundations Challenge</button>
+          </div>
+          <div className="term-list">
+            <div>
+              <h3>Recently Mastered</h3>
+              {masteredTerms.length ? masteredTerms.slice(0, 8).map((term) => <MiniTerm key={term.id} term={term} />) : <div className="empty-state">No mastered terms yet. Flashcards are a good place to begin.</div>}
+            </div>
+            <div>
+              <h3>Mistake Bank</h3>
+              {missedTerms.length ? missedTerms.slice(0, 8).map((term) => <MiniTerm key={term.id} term={term} />) : <div className="empty-state">No missed terms saved right now. Keep going.</div>}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function MiniTerm({ term }) {
+      return (
+        <div className="mini-term">
+          <strong>{term.term}</strong>
+          <p>{term.definition}</p>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+  <script>
+    window.setTimeout(function () {
+      var root = document.getElementById("root");
+      if (!root || root.querySelector(".quest-hero")) return;
+
+      var source = document.querySelector('script[type="text/babel"]');
+      var terms = [];
+      try {
+        var text = source ? source.textContent : "";
+        var start = text.indexOf("const vocabTerms = ");
+        var end = text.indexOf(";\n\n    const vocabulary = vocabTerms;", start);
+        if (start >= 0 && end > start) {
+          var arraySource = text.slice(start + "const vocabTerms = ".length, end);
+          terms = Function('"use strict"; return (' + arraySource + ");")();
+        }
+      } catch (error) {
+        terms = [];
+      }
+
+      if (!terms.length) {
+        root.innerHTML = '<section class="quest-panel"><p class="eyebrow">Vocabulary Game</p><h1>AP Micro Lexicon Quest</h1><p class="quest-intro">The game data did not load. Refresh the page once, then reopen vocabulary.html if needed.</p></section>';
+        return;
+      }
+
+      var chapters = Array.from(new Set(terms.map(function (term) { return term.chapter; })));
+      var selectedChapter = "all";
+      var mode = "dashboard";
+      var deck = terms.slice();
+      var index = 0;
+      var score = 0;
+      var flipped = false;
+      var selectedQuizAnswer = null;
+      var selectedPairAnswer = null;
+      var progress = loadProgress();
+      var roundTitle = "Multiple Choice Mode";
+      var clockSeconds = null;
+      var clockTimer = null;
+      var clockStarted = false;
+      var clockPendingStart = false;
+      var pairIds = [
+        ["ch1-scarcity", "ch4-shortage"],
+        ["ch1-efficiency", "ch1-equality"],
+        ["ch3-absolute-advantage", "ch3-comparative-advantage"],
+        ["ch2-positive-statements", "ch2-normative-statements"],
+        ["ch4-quantity-demanded", "ch4-demand-curve"],
+        ["ch4-quantity-supplied", "ch4-supply-curve"],
+        ["ch4-normal-good", "ch4-inferior-good"],
+        ["ch4-substitutes", "ch4-complements"],
+        ["ch4-equilibrium-price", "ch4-equilibrium-quantity"],
+        ["ch2-microeconomics", "ch2-macroeconomics"]
+      ];
+
+      function loadProgress() {
+        return { mastered: [], missed: [], completedChapters: [], bestScore: 0 };
+      }
+
+      function saveProgress() {
+        return;
+      }
+
+      function addUnique(list, id) {
+        if (list.indexOf(id) === -1) list.push(id);
+      }
+
+      function removeItem(list, id) {
+        var spot = list.indexOf(id);
+        if (spot >= 0) list.splice(spot, 1);
+      }
+
+      function markTerm(term, result) {
+        if (!term) return;
+        if (result === "mastered") {
+          addUnique(progress.mastered, term.id);
+          removeItem(progress.missed, term.id);
+        } else {
+          addUnique(progress.missed, term.id);
+        }
+        saveProgress();
+      }
+
+      function stopClock() {
+        if (clockTimer) {
+          window.clearInterval(clockTimer);
+          clockTimer = null;
+        }
+        clockStarted = false;
+        clockPendingStart = false;
+      }
+
+      function startClock() {
+        if (clockStarted) return;
+        clockStarted = true;
+        clockPendingStart = false;
+        if (clockSeconds === null) clockSeconds = 60;
+        clockTimer = window.setInterval(function () {
+          clockSeconds -= 1;
+          var clockNodes = document.querySelectorAll('[data-clock-display]');
+          var clockBar = document.querySelector('[data-clock-bar]');
+          clockNodes.forEach(function (clockNode) {
+            clockNode.textContent = clockSeconds + "s";
+          });
+          if (clockBar) clockBar.style.width = Math.max(0, Math.round((clockSeconds / 60) * 100)) + "%";
+          if (clockSeconds <= 0) {
+            stopClock();
+            clockSeconds = 0;
+            renderResults("Time is up");
+          }
+        }, 1000);
+      }
+
+      function shuffle(items) {
+        return items.slice().sort(function () { return Math.random() - 0.5; });
+      }
+
+      function selectedTerms() {
+        return selectedChapter === "all" ? terms : terms.filter(function (term) { return term.chapter === selectedChapter; });
+      }
+
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, function (char) {
+          return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[char];
+        });
+      }
+
+      function renderDashboard() {
+        stopClock();
+        clockSeconds = null;
+        mode = "dashboard";
+        var masteredCount = progress.mastered.length;
+        var missedCount = progress.missed.length;
+        root.innerHTML =
+          '<section class="quest-hero" aria-labelledby="quest-local-title">' +
+            '<div class="quest-title-panel">' +
+              '<p class="eyebrow">Vocabulary Game</p>' +
+              '<h1 id="quest-local-title">AP Micro Lexicon Quest</h1>' +
+              '<p class="quest-subtitle">Master the language before you master the graphs.</p>' +
+              '<p class="quest-intro">Welcome to Lexicon Quest. Your job is to master the essential vocabulary from the first four chapters of AP Microeconomics. These terms are the building blocks of scarcity, choice, trade, supply, demand, and market equilibrium.</p>' +
+            '</div>' +
+            '<aside class="quest-progress-panel"><div class="score-grid">' +
+              '<div class="score-box"><span class="score-label">Mastered</span><span class="score-value">' + masteredCount + '</span></div>' +
+              '<div class="score-box"><span class="score-label">Missed</span><span class="score-value">' + missedCount + '</span></div>' +
+              '<div class="score-box"><span class="score-label">Best Score</span><span class="score-value">' + (progress.bestScore || 0) + '%</span></div>' +
+              '<div class="score-box"><span class="score-label">Terms</span><span class="score-value">' + terms.length + '</span></div>' +
+            '</div></aside>' +
+          '</section>' +
+          '<section class="quest-section"><div class="quest-section-header"><div><p class="eyebrow">Chapter Selection</p><h2>Choose Your Study Set</h2><p>Select a chapter or use all chapters.</p></div></div>' +
+            '<div class="chapter-grid">' +
+              '<button class="chapter-button ' + (selectedChapter === "all" ? "active" : "") + '" data-chapter="all" type="button"><strong>All Chapters</strong><span>' + terms.length + ' terms</span></button>' +
+              chapters.map(function (chapter) {
+                var count = terms.filter(function (term) { return term.chapter === chapter; }).length;
+                return '<button class="chapter-button ' + (selectedChapter === chapter ? "active" : "") + '" data-chapter="' + escapeHtml(chapter) + '" type="button"><strong>' + escapeHtml(chapter.replace(": ", " - ")) + '</strong><span>' + count + ' terms</span></button>';
+              }).join("") +
+            '</div></section>' +
+          '<section class="quest-section"><div class="quest-section-header"><div><p class="eyebrow">Game Mode Selection</p><h2>Pick a Quest Mode</h2><p>You are studying ' + selectedTerms().length + ' terms right now. Start with flashcards, then move into quizzes once the definitions feel familiar.</p></div></div>' +
+            '<div class="mode-grid">' +
+              '<button class="mode-button" data-mode="flashcards" type="button"><strong>Flashcard Mode</strong><span>Flip terms, use hints, and mark what you know.</span></button>' +
+              '<button class="mode-button" data-mode="quiz" type="button"><strong>Multiple Choice</strong><span>Match each term to the best definition.</span></button>' +
+              '<button class="mode-button" data-mode="clock" type="button"><strong>Beat the Clock</strong><span>Move through a faster 14-question review round.</span></button>' +
+              '<button class="mode-button" data-mode="pairs" type="button"><strong>Confusing Pairs</strong><span>Practice terms students often mix up.</span></button>' +
+              '<button class="mode-button" data-mode="mistakes" type="button"><strong>Mistake Bank Review</strong><span>Revisit missed terms until they become sturdy.</span></button>' +
+              '<button class="mode-button" data-mode="final" type="button"><strong>Final Foundations Challenge</strong><span>A 20-question mixed review from all four chapters.</span></button>' +
+              '<button class="mode-button" data-mode="summary" type="button"><strong>Results Summary</strong><span>Check mastered terms, missed terms, and best score.</span></button>' +
+            '</div></section>';
+      }
+
+      function renderFlashcard() {
+        stopClock();
+        clockSeconds = null;
+        var current = deck[index];
+        if (!current) return renderResults();
+        root.innerHTML =
+          '<section class="quest-section quest-panel">' +
+            '<div class="game-topline"><div><p class="eyebrow">Card ' + (index + 1) + ' of ' + deck.length + '</p><h2>Flashcard Mode</h2></div><button class="quest-button secondary" data-action="dashboard" type="button">Dashboard</button></div>' +
+            '<div class="term-card"><div class="badge-row"><span class="quest-badge">' + escapeHtml(current.chapter.split(":")[0]) + '</span><span class="quest-badge gold">' + escapeHtml(current.difficulty) + '</span></div>' +
+              '<p class="term" style="margin-top:1rem">' + escapeHtml(current.term) + '</p>' +
+              (flipped ? '<p class="term-definition">' + escapeHtml(current.definition) + '</p><div class="mistake-box"><strong>Common mistake:</strong> ' + escapeHtml(current.commonMistake) + '</div>' : '<div class="hint-box"><strong>Hint:</strong> ' + escapeHtml(current.hint) + '</div>') +
+            '</div>' +
+            '<div class="button-row quest-actions"><button class="quest-button secondary" data-action="flip" type="button">' + (flipped ? "Hide Definition" : "Flip Card") + '</button><button class="quest-button success" data-action="know" type="button">Next: I Know This</button><button class="quest-button warning" data-action="again" type="button">Next: Review Again</button></div>' +
+          '</section>';
+      }
+
+      function renderQuiz() {
+        var current = deck[index];
+        if (!current) return renderResults();
+        if (!current.choices) {
+          current.choices = shuffle([current].concat(shuffle(terms.filter(function (term) { return term.id !== current.id; })).slice(0, 3)));
+        }
+        var answered = selectedQuizAnswer !== null;
+        var timerBadge = clockSeconds === null ? "" : '<span class="quest-badge gold" data-clock-display>' + clockSeconds + 's</span>';
+        var clockLabel = !clockStarted && !clockPendingStart ? "First Question Is Free" : clockPendingStart ? "Clock Starts On Next Question" : "60 Second Sprint";
+        var clockStrip = clockSeconds === null ? "" : '<div class="clock-strip" aria-label="Beat the Clock timer"><div><div class="clock-label">' + clockLabel + '</div><div class="clock-time" data-clock-display>' + clockSeconds + 's</div></div><div class="clock-bar" aria-hidden="true"><div class="clock-bar-fill" data-clock-bar style="width:' + Math.max(0, Math.round((clockSeconds / 60) * 100)) + '%"></div></div></div>';
+        root.innerHTML =
+          '<section class="quest-section quest-panel">' +
+            '<div class="game-topline"><div><p class="eyebrow">Question ' + (index + 1) + ' of ' + deck.length + '</p><h2>' + escapeHtml(roundTitle) + '</h2></div><div class="badge-row">' + timerBadge + '<button class="quest-button secondary" data-action="dashboard" type="button">Dashboard</button></div></div>' +
+            '<div class="term-card"><p class="term">' + escapeHtml(current.term) + '</p>' +
+            clockStrip +
+            '<p class="quest-intro">Choose the best definition.</p><div class="choice-grid">' +
+              current.choices.map(function (choice) {
+                var stateClass = "";
+                if (answered && choice.id === current.id) stateClass = " correct";
+                if (answered && choice.id === selectedQuizAnswer && choice.id !== current.id) stateClass = " incorrect";
+                return '<button class="choice-button' + stateClass + '" data-answer="' + escapeHtml(choice.id) + '" type="button"' + (answered ? " disabled" : "") + '>' + escapeHtml(choice.definition) + '</button>';
+              }).join("") +
+            '</div>' +
+            (answered ? '<div class="feedback-box">' + (selectedQuizAnswer === current.id ? "Correct. Nice work." : "Not quite. The best answer is: " + escapeHtml(current.definition)) + '</div>' : "") +
+            (answered && selectedQuizAnswer !== current.id ? '<div class="mistake-box"><strong>Watch for this:</strong> ' + escapeHtml(current.commonMistake) + '</div>' : "") +
+            '</div>' +
+            '<div class="button-row quest-actions"><button class="quest-button secondary" data-action="dashboard" type="button">Dashboard</button><button class="quest-button" data-action="next-question" type="button"' + (answered ? "" : " disabled") + '>Next Question</button></div>' +
+          '</section>';
+      }
+
+      function renderPairs() {
+        stopClock();
+        clockSeconds = null;
+        var current = deck[index];
+        if (!current) return renderResults();
+        var prompt = current.prompt;
+        var other = current.other;
+        var choices = current.choices;
+        var answered = selectedPairAnswer !== null;
+        root.innerHTML =
+          '<section class="quest-section quest-panel">' +
+            '<div class="game-topline"><div><p class="eyebrow">Pair ' + (index + 1) + ' of ' + deck.length + '</p><h2>Confusing Pairs Mode</h2></div><button class="quest-button secondary" data-action="dashboard" type="button">Dashboard</button></div>' +
+            '<div class="term-card"><p class="quest-intro">Which definition matches this term?</p><p class="term">' + escapeHtml(prompt.term) + '</p><div class="badge-row"><span class="quest-badge red">Often confused with ' + escapeHtml(other.term) + '</span></div><div class="choice-grid">' +
+              choices.map(function (choice) {
+                var stateClass = "";
+                if (answered && choice.id === prompt.id) stateClass = " correct";
+                if (answered && choice.id === selectedPairAnswer && choice.id !== prompt.id) stateClass = " incorrect";
+                return '<button class="choice-button' + stateClass + '" data-pair-answer="' + escapeHtml(choice.id) + '" type="button"' + (answered ? " disabled" : "") + '>' + escapeHtml(choice.definition) + '</button>';
+              }).join("") +
+            '</div>' +
+            (answered ? '<div class="feedback-box">' + (selectedPairAnswer === prompt.id ? "Correct. Nice precision." : "Not quite. The best match is: " + escapeHtml(prompt.definition)) + '</div><div class="mistake-box"><strong>Watch for this:</strong> ' + escapeHtml(prompt.commonMistake) + '</div>' : "") +
+            '</div>' +
+            '<div class="button-row quest-actions"><button class="quest-button secondary" data-action="dashboard" type="button">Dashboard</button><button class="quest-button" data-action="next-pair" type="button"' + (answered ? "" : " disabled") + '>Next Pair</button></div>' +
+          '</section>';
+      }
+
+      function renderSummary() {
+        var mastered = terms.filter(function (term) { return progress.mastered.indexOf(term.id) >= 0; });
+        var missed = terms.filter(function (term) { return progress.missed.indexOf(term.id) >= 0; });
+        root.innerHTML =
+          '<section class="quest-section quest-panel"><p class="eyebrow">Results / Progress Summary</p><h2>Your Lexicon Quest Progress</h2>' +
+            '<div class="summary-grid" style="margin-top:1rem">' +
+              '<div class="summary-tile"><strong>' + mastered.length + '</strong><span>Terms mastered</span></div>' +
+              '<div class="summary-tile"><strong>' + missed.length + '</strong><span>Terms to review</span></div>' +
+              '<div class="summary-tile"><strong>' + (progress.bestScore || 0) + '%</strong><span>Best quiz score</span></div>' +
+              '<div class="summary-tile"><strong>' + terms.length + '</strong><span>Total terms</span></div>' +
+            '</div>' +
+            '<div class="button-row quest-actions"><button class="quest-button" data-mode="mistakes" type="button">Study All Missed Terms</button><button class="quest-button secondary" data-mode="final" type="button">Final Foundations Challenge</button><button class="quest-button secondary" data-action="dashboard" type="button">Dashboard</button></div>' +
+            '<div class="term-list"><div><h3>Recently Mastered</h3>' + renderMiniTerms(mastered, "No mastered terms yet. Flashcards are a good place to begin.") + '</div><div><h3>Mistake Bank</h3>' + renderMiniTerms(missed, "No missed terms saved right now. Keep going.") + '</div></div>' +
+          '</section>';
+      }
+
+      function renderMiniTerms(list, emptyText) {
+        if (!list.length) return '<div class="empty-state">' + escapeHtml(emptyText) + '</div>';
+        return list.slice(0, 8).map(function (term) {
+          return '<div class="mini-term"><strong>' + escapeHtml(term.term) + '</strong><p>' + escapeHtml(term.definition) + '</p></div>';
+        }).join("");
+      }
+
+      function renderResults(reason) {
+        stopClock();
+        var percent = deck.length ? Math.round((score / deck.length) * 100) : 0;
+        progress.bestScore = Math.max(progress.bestScore || 0, percent);
+        saveProgress();
+        var missedCount = progress.missed.length;
+        root.innerHTML =
+          '<section class="quest-section quest-panel"><p class="eyebrow">Results</p><h2>' + escapeHtml(reason || "Round Complete") + '</h2><div class="summary-grid" style="margin-top:1rem"><div class="summary-tile"><strong>' + score + '</strong><span>Correct answers</span></div><div class="summary-tile"><strong>' + deck.length + '</strong><span>Total prompts</span></div><div class="summary-tile"><strong>' + percent + '%</strong><span>Round score</span></div><div class="summary-tile"><strong>' + missedCount + '</strong><span>Missed terms</span></div></div><div class="button-row quest-actions"><button class="quest-button" data-mode="mistakes" type="button">Study All Missed Terms</button><button class="quest-button secondary" data-action="dashboard" type="button">Back to Dashboard</button><button class="quest-button secondary" data-mode="summary" type="button">Open Full Summary</button></div></section>';
+      }
+
+      root.addEventListener("click", function (event) {
+        var target = event.target.closest("button");
+        if (!target) return;
+        if (target.dataset.chapter) {
+          selectedChapter = target.dataset.chapter;
+          renderDashboard();
+        }
+        if (target.dataset.mode === "flashcards") {
+          mode = "flashcards";
+          deck = shuffle(selectedTerms());
+          index = 0;
+          score = 0;
+          flipped = false;
+          renderFlashcard();
+        }
+        if (target.dataset.mode === "quiz") {
+          stopClock();
+          clockSeconds = null;
+          mode = "quiz";
+          roundTitle = "Multiple Choice Mode";
+          deck = shuffle(selectedTerms()).slice(0, Math.min(12, selectedTerms().length));
+          index = 0;
+          score = 0;
+          selectedQuizAnswer = null;
+          renderQuiz();
+        }
+        if (target.dataset.mode === "clock") {
+          stopClock();
+          mode = "quiz";
+          roundTitle = "Beat the Clock Mode";
+          deck = shuffle(selectedTerms()).slice(0, Math.min(14, selectedTerms().length));
+          index = 0;
+          score = 0;
+          selectedQuizAnswer = null;
+          clockSeconds = 60;
+          clockStarted = false;
+          clockPendingStart = false;
+          renderQuiz();
+        }
+        if (target.dataset.mode === "final") {
+          stopClock();
+          clockSeconds = null;
+          mode = "quiz";
+          roundTitle = "Final Foundations Challenge";
+          deck = shuffle(terms).slice(0, Math.min(20, terms.length));
+          index = 0;
+          score = 0;
+          selectedQuizAnswer = null;
+          renderQuiz();
+        }
+        if (target.dataset.mode === "mistakes") {
+          stopClock();
+          clockSeconds = null;
+          var missedTerms = terms.filter(function (term) { return progress.missed.indexOf(term.id) >= 0; });
+          mode = "flashcards";
+          deck = shuffle(missedTerms.length ? missedTerms : selectedTerms().filter(function (term) { return term.difficulty !== "easy"; }));
+          index = 0;
+          score = 0;
+          flipped = false;
+          renderFlashcard();
+        }
+        if (target.dataset.mode === "pairs") {
+          stopClock();
+          clockSeconds = null;
+          mode = "pairs";
+          deck = shuffle(pairIds.map(function (pair) {
+            var pairTerms = pair.map(function (id) {
+              return terms.find(function (term) { return term.id === id; });
+            });
+            return pairTerms[0] && pairTerms[1] ? { prompt: pairTerms[0], other: pairTerms[1], choices: shuffle(pairTerms) } : null;
+          }).filter(function (pair) { return pair; })).slice(0, 8);
+          index = 0;
+          score = 0;
+          selectedPairAnswer = null;
+          renderPairs();
+        }
+        if (target.dataset.mode === "summary") {
+          renderSummary();
+        }
+        if (target.dataset.action === "dashboard") renderDashboard();
+        if (target.dataset.action === "flip") {
+          flipped = !flipped;
+          renderFlashcard();
+        }
+        if (target.dataset.action === "know" || target.dataset.action === "again") {
+          markTerm(deck[index], target.dataset.action === "know" ? "mastered" : "missed");
+          if (target.dataset.action === "know") score += 1;
+          index += 1;
+          flipped = false;
+          renderFlashcard();
+        }
+        if (target.dataset.answer) {
+          if (selectedQuizAnswer !== null) return;
+          selectedQuizAnswer = target.dataset.answer;
+          if (target.dataset.answer === deck[index].id) {
+            score += 1;
+            markTerm(deck[index], "mastered");
+          } else {
+            markTerm(deck[index], "missed");
+          }
+          if (roundTitle === "Beat the Clock Mode" && !clockStarted && index === 0) {
+            clockPendingStart = true;
+          }
+          renderQuiz();
+        }
+        if (target.dataset.action === "next-question") {
+          if (selectedQuizAnswer === null) return;
+          index += 1;
+          selectedQuizAnswer = null;
+          if (roundTitle === "Beat the Clock Mode" && clockPendingStart && deck[index]) startClock();
+          renderQuiz();
+        }
+        if (target.dataset.pairAnswer) {
+          if (selectedPairAnswer !== null) return;
+          selectedPairAnswer = target.dataset.pairAnswer;
+          if (target.dataset.pairAnswer === deck[index].prompt.id) {
+            score += 1;
+            markTerm(deck[index].prompt, "mastered");
+          } else {
+            markTerm(deck[index].prompt, "missed");
+          }
+          renderPairs();
+        }
+        if (target.dataset.action === "next-pair") {
+          if (selectedPairAnswer === null) return;
+          index += 1;
+          selectedPairAnswer = null;
+          renderPairs();
+        }
+      });
+
+      renderDashboard();
+    }, 100);
+  </script>
+</body>
+</html>
