@@ -1,0 +1,30 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+width="300" height="300" viewBox="0 0 300 300" preserveAspectRatio="none">
+	<style>
+		text {
+		font-family : Verdana, Tahoma, sans-serif;
+		font-size : 20px;
+		fill : black;
+		stroke : none;
+		}
+	</style>
+	<g transform="translate(50,-50) translate(0,300) scale(10,-10)">
+		
+		<line x1="0" x2="20" y1="10" y2="0" stroke="blue" stroke-width=".4" />
+		<line x1="0" x2="3" y1="6" y2="0" stroke="red" stroke-width=".4" />
+		<path id="axes" d="M0,25 v-25 h25" stroke="black" stroke-width=".5" fill="none"/>
+	</g>
+	<text x="174.5" y="280" text-anchor="middle">Qm</text>
+	<text x="-124.5" y="30" transform="rotate(-90)" text-anchor="middle">Qr</text>
+	
+	<text x="174.5" y="200" fill="blue">m = 0.5</text>
+	<text x="75" y="230" fill="red">m = 2</text>
+	
+	<text x="80" y="270" fill="red" text-anchor="middle">2</text>
+	<text x="45" y="200" fill="red" text-anchor="end">6</text>
+	
+	<text x="260" y="270" fill="blue" text-anchor="middle">20</text>
+	<text x="45" y="160" fill="blue" text-anchor="end">10</text>
+</svg>
